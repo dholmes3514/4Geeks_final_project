@@ -3,7 +3,7 @@
 {
 	"name": "Python 3",
 	"image": "mcr.microsoft.com/devcontainers/python:0-3.11",
-	"onCreateCommand": "pip3 install --upgrade pip && pip3 install --user -r requirements.txt",
+	"onCreateCommand": "sudo apt update && sudo apt upgrade -y && pip3 install --upgrade pip && pip3 install --user -r requirements.txt",
 	"customizations": {
 	  "vscode": {
 		"settings": {
@@ -22,6 +22,6 @@
 	},
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "mkdir data && mkdir data/raw && mkdir data/interim && mkdir data/processed && mkdir models",
+	"postCreateCommand": "mkdir -p data && mkdir -p data/raw && mkdir -p data/interim && mkdir -p data/processed && mkdir -p models",
 	"postAttachCommand": "htop"
 }
