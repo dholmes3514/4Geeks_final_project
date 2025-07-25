@@ -8,9 +8,8 @@
 	  "vscode": {
 		"settings": {
 			"jupyter.kernels.excludePythonEnvironments": ["/usr/bin/python3"],
-			"remote.portsAttributes": {
-				"ipykernel_launcher": {"onAutoForward": "ignore"}
-			}
+			"remote.autoForwardPorts": false,
+			"remote.restoreForwardedPorts": false
 		},
 		"extensions": [
 		  "-dbaeumer.vscode-eslint",
