@@ -31,12 +31,14 @@ Fork this repository by clicking the *Fork* button at the upper right. Make sure
 
 Packages installed via `requirements.txt`:
 
-1. [numpy 2.2.3](https://numpy.org/doc/stable/index.html)
-2. [pandas 2.2.3](https://pandas.pydata.org/docs/)
-3. [scikit-learn 1.6.1](https://scikit-learn.org/stable/index.html)
-4. [matplotlib 3.10.1](https://matplotlib.org/stable/index.html)
-5. [seaborn 0.13.2](https://seaborn.pydata.org/)
-6. [ipykernel 6.29.5](https://pypi.org/project/ipykernel/)
+1. [ipykernel 6.30.0](https://pypi.org/project/ipykernel/)
+2. [matplotlib 3.10.3](https://matplotlib.org/stable/index.html)
+3. [numpy 2.3.2](https://numpy.org/doc/stable/index.html)
+4. [pandas 2.3.1](https://pandas.pydata.org/docs/)
+5. [pyarrow 21.0.0](https://arrow.apache.org/docs/python/index.html)
+6. [scipy 1.16.1](https://scipy.org/)
+7. [scikit-learn 1.7.1](https://scikit-learn.org/stable/index.html)
+8. [seaborn 0.13.2](https://seaborn.pydata.org/)
 
 If you need to install additional Python packages, you can do so via the terminal with: `pip install packagename`.
 
