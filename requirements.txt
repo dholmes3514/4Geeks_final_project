@@ -1,8 +1,8 @@
-numpy==2.2.3
-pandas==2.2.3
-scikit-learn==1.6.1
-scipy==1.15.2
-matplotlib==3.10.1
-seaborn==0.13.2
-ipykernel==6.29.5
-pyarrow==19.0.1
+ipykernel
+matplotlib
+numpy
+pandas
+pyarrow
+scikit-learn
+scipy
+seaborn
