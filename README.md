@@ -1,4 +1,5 @@
 # 4Geeks data science project boilerplate
+[![Codespaces Prebuilds](https://github.com/gperdrizet/4Geeks_datascience_project/actions/workflows/codespaces/create_codespaces_prebuilds/badge.svg)](https://github.com/gperdrizet/4Geeks_datascience_project/actions/workflows/codespaces/create_codespaces_prebuilds)
 
 Minimal Python 3.11 repository for 4Geeks data science assignments. Several useful Python packages and VSCode extensions are installed on Codespace boot-up. Directories for models and data are created within the Codespace but excluded from tracking. The notebooks directory contains `notebook.ipynb`, run this notebook to verify the environment. It can then be deleted or renamed to use for your project.
 
