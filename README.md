@@ -69,7 +69,7 @@ Minimal Python 3.11 repository for 4Geeks data science assignments. Several usef
 │   └── devcontainer.json  # Codespace/devcontainer configuration
 │
 ├── .gitignore             # Files and directories listed will be ingored by git
-├── LICENSE                # Open source GNU licence
+├── LICENSE                # Open source GNU license - copy, modify and distribute this repo freely
 ├── README.md              # This file
 ├── data/                  # Empty directory for data
 ├── models/                # Empty directory for models
