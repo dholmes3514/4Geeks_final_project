@@ -86,8 +86,7 @@ Minimal Python 3.11 repository for 4Geeks data science assignments. Several usef
 
 Packages installed via `requirements.txt`:
 
-1. [ipykernel 6.30.0](https://pypi.org/project/ipykernel)
-2. [Jupyter](https://jupyter.org)
+2. [Jupyter 1.1.1](https://jupyter.org)
 3. [matplotlib 3.10.3](https://matplotlib.org/stable/index.html)
 4. [numpy 2.3.2](https://numpy.org/doc/stable/index.html)
 5. [pandas 2.3.1](https://pandas.pydata.org/docs)
