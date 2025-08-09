@@ -1,4 +1,5 @@
 # 4Geeks data science project boilerplate
+
 [![Codespaces Prebuilds](https://github.com/gperdrizet/4Geeks_datascience_project/actions/workflows/codespaces/create_codespaces_prebuilds/badge.svg)](https://github.com/gperdrizet/4Geeks_datascience_project/actions/workflows/codespaces/create_codespaces_prebuilds)
 
 Minimal Python 3.11 repository for 4Geeks data science assignments. Several useful Python packages and VSCode extensions are installed on Codespace boot-up. Directories for models and data are created within the Codespace but excluded from tracking. The notebooks directory contains `notebook.ipynb`, run this notebook to verify the environment. It can then be deleted or renamed to use for your project.
@@ -69,14 +70,14 @@ Minimal Python 3.11 repository for 4Geeks data science assignments. Several usef
 ├──.devcontainer
 │   └── devcontainer.json  # Codespace/devcontainer configuration
 │
-├── .gitignore             # Files and directories listed will be ingored by git
-├── LICENSE                # Open source GNU license - copy, modify and distribute this repo freely
-├── README.md              # This file
 ├── data/                  # Empty directory for data
 ├── models/                # Empty directory for models
 ├── notebooks              # Notebooks directory
 │   └── notebook.ipynb     # Test notebook with library version checks
 │
+├── .gitignore             # Files and directories listed will be ignored by git
+├── LICENSE                # Open source GNU license - copy, modify and distribute this repo freely
+├── README.md              # This file
 └── requirements.txt       # List of Python packages installed during Codespace creation
 ```
 
