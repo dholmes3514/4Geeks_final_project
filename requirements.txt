@@ -8,5 +8,4 @@ scipy==1.16.1
 seaborn==0.13.2
 kaggle
 regex
-os
 xgboost
