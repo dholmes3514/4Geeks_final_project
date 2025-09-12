@@ -6,25 +6,65 @@ import pickle
 
 
 # Load assets (Label encoder, one-hot encoder, price model, TT model)
-with open('data/encoder.pkl', 'rb') as input_file:
-    encoder = pickle.load(input_file)
+with open('models/price_predictor.pkl', 'rb') as input_file:
+    pp = pickle.load(input_file)
 
-with open('data/labeler.pkl', 'rb') as input_file:
-    labeler = pickle.load(input_file)
+with open('models/turnaroundtime_predictor.pkl', 'rb') as input_file:
+    tt = pickle.load(input_file)
+
+#with open('models/labeler.pkl', 'rb') as input_file:
+    #labeler = pickle.load(input_file)
+
+# Load encoders
+
+labeler = {}
+for col in ['Customer_Name', 'City', 'State', 'Postal_Code']:
+    with open(f'{col}_encoder.pkl', 'rb') as input_file:
+        labeler[col] = pickle.load(input_file)
+                                
+with open('models/encoder.pkl', 'rb') as input_files:
+    encoder = pickle.load(input_files)
 
 
 #############
 # Functions #
 #############
 
-def preprocess_input(state, postal_code, ship_mode, category, subcategory, encoder, labeler):
-    '''Does preprocessing of user input, returns single row Pandas df for inference'''
+import pandas as pd
+import re
 
-    print('Running the input preprocessing function...')
+def preprocess_text(text):
+    text = str(text).strip()
+    text = re.sub(r"<.*?>", " ", text)
+    text = re.sub(r"\s+", " ", text)
+    text = re.sub(r"[^a-zA-Z0-9\s\-/]", "", text)
+    return text.lower().strip()
 
-    result = 'placeholder'
+def preprocess_input(df, encoder, labeler):
+    df = df.copy()
 
-    return result
+    cols_to_clean = [
+        "Order_Date", "Ship_Date", "Ship_Mode", "State", "Category", "Sub_Category"]
+
+    for col in cols_to_clean:
+        df[col] = df[col].astype(str).apply(preprocess_text)
+
+    # Label Encoding using preloaded labeler
+    for col in labeler:
+        df[f'{col}_encoded'] = labeler[col].transform(df[[col]])
+
+    df['State_encoded'] = labeler.transform(df[['State']])
+    df['Postal_Code_encoded'] = labeler.transform(df[['Postal_Code']])
+
+    # One-Hot Encoding using preloaded encoder
+    cat_df = df[['Ship_Mode', 'Segment', 'Country', 'Region', 'Category', 'Sub_Category']]
+    encoded_array = encoder.transform(cat_df)
+    encoded_df = pd.DataFrame(encoded_array, columns=encoder.get_feature_names_out(cat_df.columns), index=df.index)
+
+    # Combine all features
+    final_df = pd.concat([df[['State_encoded', 'Postal_Code_encoded']], encoded_df], axis=1)
+
+    return final_df
 
 
 def predict_price(input_data):
@@ -32,7 +72,7 @@ def predict_price(input_data):
 
     print('Running the price prediction function...')
 
-    result = 'placeholder'
+    result = pp.predict(input_data)[0]
 
     return result
 
@@ -42,7 +82,7 @@ def predict_tt(input_data):
 
     print('Running the turnaround time prediction function...')
 
-    result = 'placeholder'
+    result = tt.predict(input_data)[0]
 
     return result
 
@@ -63,15 +103,18 @@ if __name__ == '__main__':
     print('Running sales & TT app...\n')
 
     # Preprocess with input preprocessing function
-    preprocessed_data = preprocess_input(
-        order_date,
-        state,
-        postal_code,
-        category,
-        sub_category,
-        encoder,
-        labeler
-    )
+    raw_input_df = pd.DataFrame([{
+        "Order_Date": order_date,
+        "Ship_Date": ship_date,
+        "Ship_Mode": ship_mode,
+        "State": state,
+        "Category": category,
+        "Sub_Category": sub_category,
+        "Postal_Code": postal_code,
+        "Sales": sales
+    }])
+
+    preprocessed_data = preprocess_input(raw_input_df, encoder, labeler)
 
     print(f'Result from input preprocessing function: {preprocessed_data}\n')
 
