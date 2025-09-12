@@ -12,8 +12,15 @@ with open('models/price_predictor.pkl', 'rb') as input_file:
 with open('models/turnaroundtime_predictor.pkl', 'rb') as input_file:
     tt = pickle.load(input_file)
 
-with open('models/labeler.pkl', 'rb') as input_file:
-    labeler = pickle.load(input_file)
+#with open('models/labeler.pkl', 'rb') as input_file:
+    #labeler = pickle.load(input_file)
+
+# Load encoders
+
+labeler = {}
+for col in ['Customer_Name', 'City', 'State', 'Postal_Code']:
+    with open(f'{col}_encoder.pkl', 'rb') as input_file:
+        labeler[col] = pickle.load(input_file)
                                 
 with open('models/encoder.pkl', 'rb') as input_files:
     encoder = pickle.load(input_files)
@@ -25,9 +32,6 @@ with open('models/encoder.pkl', 'rb') as input_files:
 
 import pandas as pd
 import re
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder
-
-
 
 def preprocess_text(text):
     text = str(text).strip()
@@ -46,8 +50,11 @@ def preprocess_input(df, encoder, labeler):
         df[col] = df[col].astype(str).apply(preprocess_text)
 
     # Label Encoding using preloaded labeler
-    df['State_encoded'] = labeler.transform(df['State'])
-    df['Postal_Code_encoded'] = labeler.transform(df['Postal_Code'])
+    for col in labeler:
+        df[f'{col}_encoded'] = labeler[col].transform(df[[col]])
+
+    df['State_encoded'] = labeler.transform(df[['State']])
+    df['Postal_Code_encoded'] = labeler.transform(df[['Postal_Code']])
 
     # One-Hot Encoding using preloaded encoder
     cat_df = df[['Ship_Mode', 'Segment', 'Country', 'Region', 'Category', 'Sub_Category']]
