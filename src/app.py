@@ -9,8 +9,8 @@ import pickle
 with open('models/price_predictor.pkl', 'rb') as input_file:
     pp = pickle.load(input_file)
 
-with open('models/turnaroundtime_predictor.pkl', 'rb') as input_file:
-    tt = pickle.load(input_file)
+# with open('models/turnaroundtime_predictor.pkl', 'rb') as input_file:
+#     tt = pickle.load(input_file)
 
 #with open('models/labeler.pkl', 'rb') as input_file:
     #labeler = pickle.load(input_file)
@@ -18,8 +18,9 @@ with open('models/turnaroundtime_predictor.pkl', 'rb') as input_file:
 # Load encoders
 
 labeler = {}
-for col in ['Customer_Name', 'City', 'State', 'Postal_Code']:
-    with open(f'{col}_encoder.pkl', 'rb') as input_file:
+
+for col in ['State', 'Postal_Code']:
+    with open(f'models/{col}_encoder.pkl', 'rb') as input_file:
         labeler[col] = pickle.load(input_file)
                                 
 with open('models/encoder.pkl', 'rb') as input_files:
@@ -49,15 +50,12 @@ def preprocess_input(df, encoder, labeler):
     for col in cols_to_clean:
         df[col] = df[col].astype(str).apply(preprocess_text)
 
-    # Label Encoding using preloaded labeler
+    # Label Encoding using preloaded labeler 
     for col in labeler:
-        df[f'{col}_encoded'] = labeler[col].transform(df[[col]])
-
-    df['State_encoded'] = labeler.transform(df[['State']])
-    df['Postal_Code_encoded'] = labeler.transform(df[['Postal_Code']])
+        df[f'{col}_encoded'] = labeler[col].transform(df[col].to_frame())
 
     # One-Hot Encoding using preloaded encoder
-    cat_df = df[['Ship_Mode', 'Segment', 'Country', 'Region', 'Category', 'Sub_Category']]
+    cat_df = df[['Ship_Mode', 'Category', 'Sub_Category']]
     encoded_array = encoder.transform(cat_df)
     encoded_df = pd.DataFrame(encoded_array, columns=encoder.get_feature_names_out(cat_df.columns), index=df.index)
 
@@ -67,24 +65,24 @@ def preprocess_input(df, encoder, labeler):
     return final_df
 
 
-def predict_price(input_data):
+def predict_price(input_data, model):
     '''Takes preprocessed input data, runs price prediction, returns predicted price'''
 
     print('Running the price prediction function...')
 
-    result = pp.predict(input_data)[0]
+    result = model.predict(input_data)[0]
 
     return result
 
 
-def predict_tt(input_data):
-    '''Takes preprocessed input data, runs price prediction, returns predicted turnaround time'''
+# def predict_tt(input_data):
+#     '''Takes preprocessed input data, runs price prediction, returns predicted turnaround time'''
 
-    print('Running the turnaround time prediction function...')
+#     print('Running the turnaround time prediction function...')
 
-    result = tt.predict(input_data)[0]
+#     result = tt.predict(input_data)[0]
 
-    return result
+#     return result
 
 
 # Test values (fake user input) - pretend these came from flask
@@ -120,14 +118,14 @@ if __name__ == '__main__':
 
 
     # Predict price
-    predicted_price = predict_price(preprocessed_data)
+    predicted_price = predict_price(preprocessed_data, pp)
 
     print(f'Result from price prediction function: {predicted_price}\n')
 
 
-    # Predict turnaround time
-    predicted_turnaround_time = predict_tt(preprocessed_data)
+    # # Predict turnaround time
+    # predicted_turnaround_time = predict_tt(preprocessed_data)
 
-    print(f'Result from turnaround time prediction function: {predicted_turnaround_time}\n')
+    # print(f'Result from turnaround time prediction function: {predicted_turnaround_time}\n')
 
     print('Done.')
