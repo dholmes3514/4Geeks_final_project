@@ -18,8 +18,8 @@ with open('models/turnaroundtime_predictor.pkl', 'rb') as input_file:
 # Load encoders
 
 labeler = {}
-for col in ['Customer_Name', 'City', 'State', 'Postal_Code']:
-    with open(f'{col}_encoder.pkl', 'rb') as input_file:
+for col in ['State', 'Postal_Code']:
+    with open(f'models/{col}_encoder.pkl', 'rb') as input_file:
         labeler[col] = pickle.load(input_file)
                                 
 with open('models/encoder.pkl', 'rb') as input_files:
@@ -51,13 +51,10 @@ def preprocess_input(df, encoder, labeler):
 
     # Label Encoding using preloaded labeler
     for col in labeler:
-        df[f'{col}_encoded'] = labeler[col].transform(df[[col]])
-
-    df['State_encoded'] = labeler.transform(df[['State']])
-    df['Postal_Code_encoded'] = labeler.transform(df[['Postal_Code']])
+        df[f'models/{col}_encoded'] = labeler[col].transform(df[[col]])
 
     # One-Hot Encoding using preloaded encoder
-    cat_df = df[['Ship_Mode', 'Segment', 'Country', 'Region', 'Category', 'Sub_Category']]
+    cat_df = df[['Ship_Mode','Category', 'Sub_Category']]
     encoded_array = encoder.transform(cat_df)
     encoded_df = pd.DataFrame(encoded_array, columns=encoder.get_feature_names_out(cat_df.columns), index=df.index)
 
