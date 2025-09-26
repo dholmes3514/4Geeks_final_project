@@ -9,8 +9,8 @@ import pickle
 with open('models/price_predictor.pkl', 'rb') as input_file:
     pp = pickle.load(input_file)
 
-# with open('models/turnaroundtime_predictor.pkl', 'rb') as input_file:
-#     tt = pickle.load(input_file)
+with open('models/turnaroundtime_predictor.pkl', 'rb') as input_file:
+     tt = pickle.load(input_file)
 
 #with open('models/labeler.pkl', 'rb') as input_file:
     #labeler = pickle.load(input_file)
@@ -18,7 +18,6 @@ with open('models/price_predictor.pkl', 'rb') as input_file:
 # Load encoders
 
 labeler = {}
-
 for col in ['State', 'Postal_Code']:
     with open(f'models/{col}_encoder.pkl', 'rb') as input_file:
         labeler[col] = pickle.load(input_file)
@@ -44,8 +43,7 @@ def preprocess_text(text):
 def preprocess_input(df, encoder, labeler):
     df = df.copy()
 
-    cols_to_clean = [
-        "Order_Date", "Ship_Date", "Ship_Mode", "State", "Category", "Sub_Category"]
+    cols_to_clean = ["Ship_Mode", "State", "Category", "Sub_Category"]
 
     for col in cols_to_clean:
         df[col] = df[col].astype(str).apply(preprocess_text)
@@ -75,25 +73,22 @@ def predict_price(input_data, model):
     return result
 
 
-# def predict_tt(input_data):
-#     '''Takes preprocessed input data, runs price prediction, returns predicted turnaround time'''
+def predict_tt(input_data):
+    '''Takes preprocessed input data, runs price prediction, returns predicted turnaround time'''
 
-#     print('Running the turnaround time prediction function...')
+    print('Running the turnaround time prediction function...')
 
-#     result = tt.predict(input_data)[0]
+    result = tt.predict(input_data)[0]
 
-#     return result
+    return result
 
 
 # Test values (fake user input) - pretend these came from flask
-order_date = '8/11/2017'
-ship_date = '11/11/2017'
 ship_mode = 'Second Class'
 state = 'Kentucky'
 postal_code = '42420'
 category = 'Furniture'
 sub_category = 'Bookcases'
-sales = '261.96'
 
 # 'Main fence'
 if __name__ == '__main__':
@@ -102,14 +97,11 @@ if __name__ == '__main__':
 
     # Preprocess with input preprocessing function
     raw_input_df = pd.DataFrame([{
-        "Order_Date": order_date,
-        "Ship_Date": ship_date,
         "Ship_Mode": ship_mode,
         "State": state,
         "Category": category,
         "Sub_Category": sub_category,
         "Postal_Code": postal_code,
-        "Sales": sales
     }])
 
     preprocessed_data = preprocess_input(raw_input_df, encoder, labeler)
@@ -123,9 +115,9 @@ if __name__ == '__main__':
     print(f'Result from price prediction function: {predicted_price}\n')
 
 
-    # # Predict turnaround time
-    # predicted_turnaround_time = predict_tt(preprocessed_data)
+    #Predict turnaround time
+    predicted_turnaround_time = predict_tt(preprocessed_data)
 
-    # print(f'Result from turnaround time prediction function: {predicted_turnaround_time}\n')
+    print(f'Result from turnaround time prediction function: {predicted_turnaround_time}\n')
 
     print('Done.')
