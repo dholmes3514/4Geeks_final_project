@@ -1,12 +1,17 @@
+<<<<<<< HEAD
 streamlit
 ipykernel==6.30.0
+=======
+jupyter==1.1.1
+>>>>>>> 3ca22be03335902a7d486394e865057c4f3ac2fc
 matplotlib==3.10.3
 numpy==2.3.2
 pandas==2.3.1
 pyarrow==21.0.0
 scikit-learn==1.7.1
 scipy==1.16.1
+streamlit==1.50.0
 seaborn==0.13.2
-kaggle
-regex
-xgboost
+kaggle==1.7.4.5
+regex==2025.9.1
+xgboost==3.0.5

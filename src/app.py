@@ -6,6 +6,9 @@ import streamlit as st
 st.title("🎯 Price & Turnaround Time Predictor")
 st.markdown("Use this tool to estimate project timelines and costs based on work type and label.")
 
+import pandas as pd
+import streamlit as st
+
 # Flask stuff (wait for later)
 
 
@@ -15,6 +18,8 @@ with open('models/price_predictor.pkl', 'rb') as input_file:
 
 with open('models/turnaroundtime_predictor.pkl', 'rb') as input_file:
      tt = pickle.load(input_file)
+
+data_df = pd.read_csv('data/training_data')
 
 # Load encoders
 
@@ -87,19 +92,47 @@ with col2:
     state = st.text_input("State", "Kentucky")
     postal_code = st.text_input("Postal Code", "42420")
 
-if st.button("Predict Price & Turnaround Time"):
+# 'Main fence'
+if __name__ == '__main__':
+
+    print('Running sales & TT app...\n')
+
+    # Page title
+    st.title('KNN movie recommender')
+
+    ship_mode=st.selectbox(
+        label='Choose the shipping mode:', 
+        options=['first class', 'same day', 'second class', 'standard class'],
+        placeholder=''
+    )
+
     raw_input_df = pd.DataFrame([{
         "Ship_Mode": ship_mode,
-        "State": state,
-        "Category": category,
-        "Sub_Category": sub_category,
-        "Postal_Code": postal_code,
+        # "State": state,
+        # "Category": category,
+        # "Sub_Category": sub_category,
+        # "Postal_Code": postal_code,
     }])
-    try:
-        preprocessed_data = preprocess_input(raw_input_df, encoder, labeler)
-        predicted_price = predict_price(preprocessed_data, pp)
-        predicted_turnaround_time = predict_tt(preprocessed_data)
-        st.success(f"Predicted Price: ${predicted_price:,.2f}")
-        st.info(f"Predicted Turnaround Time: {predicted_turnaround_time} days")
-    except Exception as e:
-        st.error(f"Prediction failed: {e}")
+
+    print(raw_input_df.head())
+
+    st.text(ship_mode)
+
+
+    # preprocessed_data = preprocess_input(raw_input_df, encoder, labeler)
+
+    # print(f'Result from input preprocessing function: {preprocessed_data}\n')
+
+
+    # # Predict price
+    # predicted_price = predict_price(preprocessed_data, pp)
+
+    # print(f'Result from price prediction function: {predicted_price}\n')
+
+
+    # #Predict turnaround time
+    # predicted_turnaround_time = predict_tt(preprocessed_data)
+
+    # print(f'Result from turnaround time prediction function: {predicted_turnaround_time}\n')
+
+    # print('Done.')
