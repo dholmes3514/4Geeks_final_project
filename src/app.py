@@ -1,6 +1,10 @@
 '''Web app for price and turnaround time prediction'''
 
 import pickle
+import streamlit as st
+
+st.title("🎯 Price & Turnaround Time Predictor")
+st.markdown("Use this tool to estimate project timelines and costs based on work type and label.")
 
 # Flask stuff (wait for later)
 
@@ -11,9 +15,6 @@ with open('models/price_predictor.pkl', 'rb') as input_file:
 
 with open('models/turnaroundtime_predictor.pkl', 'rb') as input_file:
      tt = pickle.load(input_file)
-
-#with open('models/labeler.pkl', 'rb') as input_file:
-    #labeler = pickle.load(input_file)
 
 # Load encoders
 
@@ -65,37 +66,28 @@ def preprocess_input(df, encoder, labeler):
 
 def predict_price(input_data, model):
     '''Takes preprocessed input data, runs price prediction, returns predicted price'''
-
-    print('Running the price prediction function...')
-
     result = model.predict(input_data)[0]
-
     return result
 
 
 def predict_tt(input_data):
     '''Takes preprocessed input data, runs price prediction, returns predicted turnaround time'''
-
-    print('Running the turnaround time prediction function...')
-
     result = tt.predict(input_data)[0]
-
     return result
 
+# Streamlit Dashboard Layout
+st.header("Input Project Details")
 
-# Test values (fake user input) - pretend these came from flask
-ship_mode = 'Second Class'
-state = 'Kentucky'
-postal_code = '42420'
-category = 'Furniture'
-sub_category = 'Bookcases'
+col1, col2 = st.columns(2)
+with col1:
+    ship_mode = st.selectbox("Ship Mode", ["First Class", "Second Class", "Standard Class", "Same Day"])
+    category = st.selectbox("Category", ["Furniture", "Office Supplies", "Technology"])
+    sub_category = st.selectbox("Sub-Category", ["Bookcases", "Chairs", "Phones", "Binders", "Tables", "Storage", "Supplies", "Machines", "Copiers", "Accessories", "Furnishings", "Paper", "Appliances", "Art", "Envelopes", "Fasteners", "Labels"])
+with col2:
+    state = st.text_input("State", "Kentucky")
+    postal_code = st.text_input("Postal Code", "42420")
 
-# 'Main fence'
-if __name__ == '__main__':
-
-    print('Running sales & TT app...\n')
-
-    # Preprocess with input preprocessing function
+if st.button("Predict Price & Turnaround Time"):
     raw_input_df = pd.DataFrame([{
         "Ship_Mode": ship_mode,
         "State": state,
@@ -103,21 +95,11 @@ if __name__ == '__main__':
         "Sub_Category": sub_category,
         "Postal_Code": postal_code,
     }])
-
-    preprocessed_data = preprocess_input(raw_input_df, encoder, labeler)
-
-    print(f'Result from input preprocessing function: {preprocessed_data}\n')
-
-
-    # Predict price
-    predicted_price = predict_price(preprocessed_data, pp)
-
-    print(f'Result from price prediction function: {predicted_price}\n')
-
-
-    #Predict turnaround time
-    predicted_turnaround_time = predict_tt(preprocessed_data)
-
-    print(f'Result from turnaround time prediction function: {predicted_turnaround_time}\n')
-
-    print('Done.')
+    try:
+        preprocessed_data = preprocess_input(raw_input_df, encoder, labeler)
+        predicted_price = predict_price(preprocessed_data, pp)
+        predicted_turnaround_time = predict_tt(preprocessed_data)
+        st.success(f"Predicted Price: ${predicted_price:,.2f}")
+        st.info(f"Predicted Turnaround Time: {predicted_turnaround_time} days")
+    except Exception as e:
+        st.error(f"Prediction failed: {e}")
