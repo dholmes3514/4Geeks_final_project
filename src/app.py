@@ -2,6 +2,7 @@
 
 import pickle
 import streamlit as st
+import pandas as pd
 
 st.title("🎯 Price & Turnaround Time Predictor")
 st.markdown("Use this tool to estimate project timelines and costs based on work type and label.")
