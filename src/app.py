@@ -4,8 +4,12 @@ import pickle
 import streamlit as st
 import pandas as pd
 
-st.title("🎯 Price & Turnaround Time Predictor")
-st.markdown("Use this tool to estimate project timelines and costs based on work type and label.")
+st.set_page_config(
+    page_title="Price & Turnaround Dashboard",
+    page_icon="📦",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 # Flask stuff (wait for later)
 
@@ -86,17 +90,14 @@ if __name__ == '__main__':
 
     # Streamlit Dashboard Layout
     st.header("Input Project Details")
+    st.sidebar.header("🔍 Input Parameters")
+    ship_mode = st.sidebar.selectbox("Ship Mode", ["First Class", "Second Class", "Standard Class", "Same Day"])
+    category = st.sidebar.selectbox("Category", ["Furniture", "Office Supplies", "Technology"])
+    sub_category = st.sidebar.selectbox("Sub-Category", ["Bookcases", "Chairs", "Phones", "Binders", "Tables", "Storage", "Supplies", "Machines", "Copiers", "Accessories", "Furnishings", "Paper", "Appliances", "Art", "Envelopes", "Fasteners", "Labels"])
+    state = st.sidebar.text_input("State", "Kentucky")
+    postal_code = st.sidebar.text_input("Postal Code", "42420")
 
-    col1, col2 = st.columns(2)
-    with col1:
-        ship_mode = st.selectbox("Ship Mode", ["First Class", "Second Class", "Standard Class", "Same Day"])
-        category = st.selectbox("Category", ["Furniture", "Office Supplies", "Technology"])
-        sub_category = st.selectbox("Sub-Category", ["Bookcases", "Chairs", "Phones", "Binders", "Tables", "Storage", "Supplies", "Machines", "Copiers", "Accessories", "Furnishings", "Paper", "Appliances", "Art", "Envelopes", "Fasteners", "Labels"])
-    with col2:
-        state = st.text_input("State", "Kentucky")
-        postal_code = st.text_input("Postal Code", "42420")
-
-
+    if st.sidebar.button("Run Prediction"):
     raw_input_df = pd.DataFrame([{
         "Ship_Mode": ship_mode,
         "State": state,
@@ -105,9 +106,16 @@ if __name__ == '__main__':
         "Postal_Code": postal_code,
     }])
 
-    print(raw_input_df.head())
+    preprocessed_data = preprocess_input(raw_input_df, encoder, labeler)
+    predicted_price = predict_price(preprocessed_data, pp)
+    predicted_turnaround_time = predict_tt(preprocessed_data)
 
-    st.text(ship_mode)
+    # Display results in main panel
+    st.subheader("📈 Prediction Results")
+    col1, col2 = st.columns(2)
+    col1.metric("💰 Estimated Price", f"${predicted_price:,.2f}")
+    col2.metric("⏱️ Turnaround Time", f"{predicted_turnaround_time:.1f} days")
+    print(raw_input_df.head())
 
 
     preprocessed_data = preprocess_input(raw_input_df, encoder, labeler)
