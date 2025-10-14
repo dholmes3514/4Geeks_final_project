@@ -6,9 +6,6 @@ import streamlit as st
 st.title("🎯 Price & Turnaround Time Predictor")
 st.markdown("Use this tool to estimate project timelines and costs based on work type and label.")
 
-import pandas as pd
-import streamlit as st
-
 # Flask stuff (wait for later)
 
 
@@ -80,38 +77,31 @@ def predict_tt(input_data):
     result = tt.predict(input_data)[0]
     return result
 
-# Streamlit Dashboard Layout
-st.header("Input Project Details")
-
-col1, col2 = st.columns(2)
-with col1:
-    ship_mode = st.selectbox("Ship Mode", ["First Class", "Second Class", "Standard Class", "Same Day"])
-    category = st.selectbox("Category", ["Furniture", "Office Supplies", "Technology"])
-    sub_category = st.selectbox("Sub-Category", ["Bookcases", "Chairs", "Phones", "Binders", "Tables", "Storage", "Supplies", "Machines", "Copiers", "Accessories", "Furnishings", "Paper", "Appliances", "Art", "Envelopes", "Fasteners", "Labels"])
-with col2:
-    state = st.text_input("State", "Kentucky")
-    postal_code = st.text_input("Postal Code", "42420")
 
 # 'Main fence'
 if __name__ == '__main__':
 
     print('Running sales & TT app...\n')
 
-    # Page title
-    st.title('KNN movie recommender')
+    # Streamlit Dashboard Layout
+    st.header("Input Project Details")
 
-    ship_mode=st.selectbox(
-        label='Choose the shipping mode:', 
-        options=['first class', 'same day', 'second class', 'standard class'],
-        placeholder=''
-    )
+    col1, col2 = st.columns(2)
+    with col1:
+        ship_mode = st.selectbox("Ship Mode", ["First Class", "Second Class", "Standard Class", "Same Day"])
+        category = st.selectbox("Category", ["Furniture", "Office Supplies", "Technology"])
+        sub_category = st.selectbox("Sub-Category", ["Bookcases", "Chairs", "Phones", "Binders", "Tables", "Storage", "Supplies", "Machines", "Copiers", "Accessories", "Furnishings", "Paper", "Appliances", "Art", "Envelopes", "Fasteners", "Labels"])
+    with col2:
+        state = st.text_input("State", "Kentucky")
+        postal_code = st.text_input("Postal Code", "42420")
+
 
     raw_input_df = pd.DataFrame([{
         "Ship_Mode": ship_mode,
-        # "State": state,
-        # "Category": category,
-        # "Sub_Category": sub_category,
-        # "Postal_Code": postal_code,
+        "State": state,
+        "Category": category,
+        "Sub_Category": sub_category,
+        "Postal_Code": postal_code,
     }])
 
     print(raw_input_df.head())
@@ -119,20 +109,20 @@ if __name__ == '__main__':
     st.text(ship_mode)
 
 
-    # preprocessed_data = preprocess_input(raw_input_df, encoder, labeler)
+    preprocessed_data = preprocess_input(raw_input_df, encoder, labeler)
 
-    # print(f'Result from input preprocessing function: {preprocessed_data}\n')
-
-
-    # # Predict price
-    # predicted_price = predict_price(preprocessed_data, pp)
-
-    # print(f'Result from price prediction function: {predicted_price}\n')
+    print(f'Result from input preprocessing function: {preprocessed_data}\n')
 
 
-    # #Predict turnaround time
-    # predicted_turnaround_time = predict_tt(preprocessed_data)
+    # Predict price
+    predicted_price = predict_price(preprocessed_data, pp)
 
-    # print(f'Result from turnaround time prediction function: {predicted_turnaround_time}\n')
+    print(f'Result from price prediction function: {predicted_price}\n')
 
-    # print('Done.')
+
+    #Predict turnaround time
+    predicted_turnaround_time = predict_tt(preprocessed_data)
+
+    print(f'Result from turnaround time prediction function: {predicted_turnaround_time}\n')
+
+    print('Done.')
