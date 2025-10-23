@@ -1,9 +1,7 @@
-<<<<<<< HEAD
 streamlit
+plotly
 ipykernel==6.30.0
-=======
 jupyter==1.1.1
->>>>>>> 3ca22be03335902a7d486394e865057c4f3ac2fc
 matplotlib==3.10.3
 numpy==2.3.2
 pandas==2.3.1
